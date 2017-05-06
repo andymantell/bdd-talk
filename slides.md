@@ -106,7 +106,6 @@ include Capybara::DSL
 
 Capybara.default_driver = :poltergeist
 Capybara.javascript_driver = :poltergeist
-
 ```
 
 ------
@@ -290,8 +289,6 @@ Before do |scenario|
   rescue Capybara::Poltergeist::JavascriptError
   end
 end
-
-
 ```
 
 This will run before _every_ scenario. You could also feasibly do this in the `Given` step. This is just an example - the things you might need to do, and _where_ is appropriate to do them will vary depending on your app.
