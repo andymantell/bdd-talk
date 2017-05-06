@@ -290,19 +290,25 @@ _Yes, I'm silently swallowing JavaScript errors, because TodoMVC is flaky_
 
 ------
 
-# A more complex scenario
+# Examples of other Capybara commands
+
+- `find` - finds an element based on a CSS selector or XPath
+- `fill_in` - fills in an input field
+- `click_link` - click a link
+- `click_button` - click a button
+- `assert_text` - Assert that some text appear on the screen
+
+And many more...
+
+http://www.rubydoc.info/github/jnicklas/capybara
 
 ------
 
-# A more complex step definition
+# Running as part of your CI pipeline
 
-------
+Developers would the test suite against their local builds before they push work.
 
-Test output here
-
-------
-
-# Running it in TravisCI
+The next step would be to get in running in your CI pipeline, whether that be Jenkins, Travis, or whatever. Each time changes are pushed to your integration environment, the tests would then run and report any failures.
 
 ------
 
@@ -326,11 +332,17 @@ Having said that, if you're not doing any testing at all - it's not a bad place 
 
 Writing scenarios can be quite tricky! It can be hard to write them in a clean and friendly way whilst also making them map nicely to step definitions. They are best written by a developer _and_ someone from elsewhere in the business. Not one or the other.
 
+```
+Example of bad scenario here
+```
+
 ------
 
 # Pitfalls
 
 Testing via a headless browser can sometimes be unstable. For example, if your page moves while Capybara is interacting with it, it might fail to click a button correctly. One case would be animations and transitions.
+
+We can get round this with a little snippet of JavaScript which we pass to the web browser via the tests:
 
 ```js
 (function() {
@@ -359,7 +371,7 @@ Be careful with XPath!
 
 The default selector for Capybara is CSS, but it used to be XPath and I see many people still using it as the default. However, I often see this:
 
-BAD XPATH HERE
+```/html/body/main/div[2]/div/form/input[2]```
 
 This is incredibly brittle - if someone changes the HTML they could easily break hundreds of tests in one fell swoop.
 
@@ -387,6 +399,10 @@ Whereas CSS can only really look _down_ the tree.
 
 It's extremely powerful, but you probably don't need it most of the time.
 
-Use CSS selectors, or if you must use XPath - at least write _good_ XPath.
+Use CSS selectors, or if you must use XPath - at least write _sensible_ XPath.
+
+```//*[@id="search_button"]```
 
 ------
+
+# Questions?
