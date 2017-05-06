@@ -11,6 +11,12 @@
     text-align: center;
   }
 
+  h1,
+  h2,
+  h3 {
+    font-family: 'Roboto Slab', serif;
+  }
+
   .cover:before {
     content: '';
     display: block;
@@ -20,7 +26,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: transparent radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%,rgba(0,0,0,0) 100%);
+    background: transparent radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 100%);
   }
 
   .cover > * {
