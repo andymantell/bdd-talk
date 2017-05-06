@@ -405,4 +405,10 @@ Use CSS selectors, or if you must use XPath - at least write _sensible_ XPath.
 
 ------
 
+## Links
+
+- These slides: https://bdd-talk.herokuapp.com/
+- Example test suite from the slides: https://github.com/andymantell/bdd-talk-example
+- https://github.com/teamcapybara/capybara and http://www.rubydoc.info/github/jnicklas/capybara
+
 # Questions?
