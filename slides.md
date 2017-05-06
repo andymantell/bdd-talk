@@ -262,6 +262,7 @@ cucumber features/todos.feature:3 # Scenario: Entering a single todo item
 3 steps (1 failed, 2 passed)
 0m3.568s
 ```
+
 ------
 
 
@@ -287,6 +288,42 @@ end
 This will run before _every_ scenario. You could also feasibly do this in the `Given` step. This is just an example - the things you might need to do, and _where_ is appropriate to do them will vary depending on your app.
 
 _Yes, I'm silently swallowing JavaScript errors, because TodoMVC is flaky_
+
+------
+
+# Error screenshots
+
+In this instance, the error message was relatively descriptive. Sometimes however, you will want to see what was in the browser at the point where it fails.
+
+We can do this with another hook to automatically take screenshots upon failure:
+
+```
+After do |scenario|
+  if scenario.failed?
+    p "Scenario failed, screenshot generated."
+    time = Time.now.strftime('%Y_%m_%d_%H_%M_%S_')
+    name_of_scenario = time + scenario.name.gsub(/\s+/, "_").gsub("/","_")
+    save_screenshot("screenshots/#{name_of_scenario}.png", full: true)
+  end
+end
+```
+
+------
+
+# Error screenshots
+
+`Ambiguous match, found 2 elements matching css ".todo-list .todo label" with text "Write Futuresync slides" (Capybara::Ambiguous)`
+
+![Error screenshot](assets/images/2017_05_06_13_17_29_Entering_a_single_todo_item.png)
+------
+
+# A second scenario
+
+You can have multiple scenarios relating to a particular feature in each `.feature` file. You can also have multiple `.feature` files. This is useful for structuring your tests in a sensible way.
+
+```
+Second example scenario here
+```
 
 ------
 
