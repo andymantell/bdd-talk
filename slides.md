@@ -1,7 +1,88 @@
+<link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:700" rel="stylesheet">
+
 <style type="text/css">body {background: white none;}#impress,#impress > div,.step {-webkit-transition: none!important;-moz-transition: none!important;-ms-transition: none!important;-o-transition: none!important;transition: none!important;}</style>
 
-# BDD
+<style type="text/css">
+  .cover {
+    color: #fff;
+    font-family: 'Roboto Slab', serif;
+    font-size: 40px;
+    text-shadow: 0 0 100px black;
+    text-align: center;
+  }
+
+  .cover:before {
+    content: '';
+    display: block;
+    width: 200%;
+    height: 200%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent radial-gradient(ellipse at center, rgba(0,0,0,0.5) 0%,rgba(0,0,0,0) 100%);
+  }
+
+  .cover > * {
+    position: relative;
+  }
+
+  .cover h1 {
+    font-size: 100px;
+  }
+
+  .cover h2 {
+    font-size: 70px;
+  }
+
+  .cover img {
+    display: none;
+  }
+
+  body {
+    background-size: cover;
+    font-family: "Roboto", sans-serif;
+  }
+
+</style>
+
+<script>
+(function() {
+
+  document.addEventListener('impress:stepenter', function(e) {
+    var cover = e.target.querySelector('.cover img')
+
+    if(cover && e.target.contains(cover)) {
+      var cover_src = cover.getAttribute('src')
+      document.body.style.backgroundImage = 'url(' + cover_src + ')'
+    } else {
+      document.body.style.backgroundImage = 'none'
+    }
+  })
+
+  document.addEventListener('impress:stepleave', function(e) {
+    var cover = e.target.querySelector('.cover img')
+
+    if(cover && e.target.contains(cover)) {
+      document.body.style.backgroundImage = 'none'
+    }
+  })
+})()
+</script>
+
+<div class="cover" id="capybara">
+
+# Behaviour Driven Development
 ## Brought to you today by Gherkins, Cucumbers and an enormous Guinea pig
+
+![Capybara](assets/images/capybara.jpg)
+
+<br><br>
+
+Andy Mantell - Contract frontend developer<br>
+(@andymantell)
+
+</div>
 
 ------
 
