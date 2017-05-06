@@ -276,7 +276,7 @@ To combat this, this particular app needs us to empty out the local storage. We 
 ```ruby
 Before do |scenario|
   begin
-    visit('http://todomvc.com/')
+    visit('http://todomvc.com/page-that-doesnt-exist')
     page.execute_script('localStorage.clear()')
   rescue Capybara::Poltergeist::JavascriptError
   end
