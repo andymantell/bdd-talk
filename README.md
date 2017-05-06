@@ -1,3 +1,5 @@
+[View slides](https://bdd-talk.herokuapp.com/)
+
 [View slide notes](slides.md)
 
-Run `npm start` to view the slides.
+Example test suite mentioned in the slides can be found at https://github.com/andymantell/bdd-talk-example
