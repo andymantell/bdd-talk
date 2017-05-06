@@ -1,0 +1,24 @@
+{
+  "name": "bdd-talk",
+  "version": "1.0.0",
+  "description": "BDD talk",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js",
+    "start": "node server.js",
+    "dev": "supervisor --extensions 'js,md' server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andymantell/bdd-talk.git"
+  },
+  "author": "Andy Mantell",
+  "homepage": "https://github.com/andymantell/bdd-talk#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "markpress": "^2.0.2"
+  },
+  "engines": {
+    "node": "6"
+  }
+}
