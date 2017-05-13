@@ -1,18 +1,52 @@
-<div class="cover" id="capybara">
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      @page {
+        size: 1210px 681px;
+        margin: 0;
+      }
+
+      @media print {
+        .remark-slide-scaler {
+          width: 100% !important;
+          height: 100% !important;
+          transform: scale(1) !important;
+          top: 0 !important;
+          left: 0 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
 
 # Behaviour Driven Development
 ## Brought to you today by Gherkins, Cucumbers and an enormous Guinea pig
 
-![Capybara](assets/images/capybara.jpg)
+<!-- ![Capybara](assets/images/capybara.jpg) -->
 
 <br><br>
 
 Andy Mantell - Contract frontend developer<br>
 (@andymantell)
 
-</div>
-
-------
+---
 
 # What is BDD?
 
@@ -22,7 +56,7 @@ An extension of Test Driven Development
 
 Where TDD tends to be extremely technical and the sole preserve of developers, BDD tries to bring together the business requirements (Maybe it's your product owner, or a stakeholder) and the tester/developer.
 
-------
+---
 
 # What is BDD?
 
@@ -36,7 +70,7 @@ The behaviour specification is then turned into an automated test suite.
 
 In order to achieve this, BDD is supported by a set of languages and tools to define the behaviours and to run the tests
 
-------
+---
 
 # BDD tooling
 
@@ -46,7 +80,7 @@ There are a variety of tools available, but today I'm going to cover:
 - Cucumber (A tool to map these scenarios to test steps)
 - Capybara (A tool for driving a web browser in a test suite)
 
-------
+---
 
 # Setup
 
@@ -68,7 +102,7 @@ gem 'poltergeist'
 
 And type `bundle install` to install these dependencies (See http://bundler.io/)
 
-------
+---
 
 # Setup
 
@@ -91,7 +125,7 @@ Then `cucumber` and you should see
 0m0.000s
 ```
 
-------
+---
 
 # Configure Capybara
 
@@ -108,11 +142,11 @@ Capybara.default_driver = :poltergeist
 Capybara.javascript_driver = :poltergeist
 ```
 
-------
+---
 
 We're ready to go. Now's a good time to `git commit -m "Initial commit"`
 
-------
+---
 
 # Gherkin scenario
 
@@ -128,7 +162,7 @@ Feature: Basic todo list manipulation
     Then I see my todo in the list
 ```
 
-------
+---
 
 # Pending step definitions
 
@@ -165,7 +199,7 @@ end
 ```
 
 </small>
-------
+---
 
 # Step definitions
 
@@ -185,7 +219,7 @@ Then(/^I see my todo in the list$/) do
   pending # Write code here that turns the phrase above into concrete actions
 end
 ```
-------
+---
 
 # Step definitions
 
@@ -207,11 +241,11 @@ Feature: Basic todo list manipulation
 0m0.003s
 ```
 
-------
+---
 
 # Filling out the step definitions
 
-```
+```ruby
 Given(/^I am viewing the TodoMVC Vue example$/) do
   visit('http://todomvc.com/examples/vue/')
 end
@@ -227,7 +261,7 @@ Then(/^I see my todo in the list$/) do
 end
 ```
 
-------
+---
 
 Running `cucumber` again, you should see:
 
@@ -247,7 +281,7 @@ Feature: Basic todo list manipulation
 
 Green!
 
-------
+---
 
 # Fail!
 
@@ -271,7 +305,7 @@ cucumber features/todos.feature:3 # Scenario: Entering a single todo item
 0m3.568s
 ```
 
-------
+---
 
 
 # Getting the system into a known state each time
@@ -295,7 +329,7 @@ This will run before _every_ scenario. You could also feasibly do this in the `G
 
 _Yes, I'm silently swallowing JavaScript errors, because TodoMVC is flaky_
 
-------
+---
 
 # Error screenshots
 
@@ -314,24 +348,108 @@ After do |scenario|
 end
 ```
 
-------
+---
 
 # Error screenshots
 
 `Ambiguous match, found 2 elements matching css ".todo-list .todo label" with text "Write Futuresync slides" (Capybara::Ambiguous)`
 
 ![Error screenshot](assets/images/2017_05_06_13_17_29_Entering_a_single_todo_item.png)
-------
+---
 
-# A second scenario
+# More scenarios
 
 You can have multiple scenarios relating to a particular feature in each `.feature` file. You can also have multiple `.feature` files. This is useful for structuring your tests in a sensible way.
 
 ```
-Second example scenario here
+Feature: Basic todo list manipulation
+
+  Scenario: Entering a single todo item
+    Given I am viewing the TodoMVC Vue example
+    When I enter a todo
+    Then I see my todo in the list
+
+  Scenario: Deleting a todo item
+    Given I am viewing the TodoMVC Vue example
+    And I have "1" todo items in the list
+    When I delete "1" todo items
+    Then I see "0" todo items in the list
+
+  Scenario: Deleting several todo items
+    Given I am viewing the TodoMVC Vue example
+    And I have 7 todo items in the list
+    When I delete 4 todo items
+    Then I see 3 todo items in the list
 ```
 
-------
+---
+
+# Parameterized steps
+
+```ruby
+Given(/^I have (\d+) todo items in the list$/) do |number|
+  input = find('.new-todo')
+
+  number.to_i.times do
+    input.set("Todo item #{number}")
+    input.native.send_keys(:return)
+  end
+end
+
+When(/^I delete (\d+) todo items$/) do |number|
+  number.to_i.times do
+    first('.destroy', :visible => false, :wait => true).trigger('click')
+  end
+end
+
+Then(/^I see (\d+) todo items in the list$/) do |number|
+  page.assert_selector('.todo', :count => number)
+end
+```
+
+---
+
+# Scenario outlines
+
+The previous example contains quite a lot of repetition.
+
+We can combat this with "Scenario Outlines"
+
+```
+  Scenario: Deleting a todo item
+    Given I am viewing the TodoMVC Vue example
+    And I have "1" todo items in the list
+    When I delete "1" todo items
+    Then I see "0" todo items in the list
+
+  Scenario: Deleting several todo items
+    Given I am viewing the TodoMVC Vue example
+    And I have 7 todo items in the list
+    When I delete 4 todo items
+    Then I see 3 todo items in the list
+```
+
+---
+
+# Scenario outlines
+
+```
+Scenario Outline: Deleting a todo item
+    Given I am viewing the TodoMVC Vue example
+    And I have <start> todo items in the list
+    When I delete <delete> todo items
+    Then I see <result> todo items in the list
+
+    Examples:
+      | start | delete | result |
+      | 1     | 1      | 0      |
+      | 5     | 5      | 0      |
+      | 10    | 5      | 5      |
+      | 7     | 4      | 3      |
+      | 100   | 99     | 1      |
+```
+
+---
 
 # Examples of other Capybara commands
 
@@ -345,15 +463,15 @@ And many more...
 
 http://www.rubydoc.info/github/jnicklas/capybara
 
-------
+---
 
 # Running as part of your CI pipeline
 
-Developers would the test suite against their local builds before they push work.
+Developers would run the test suite against their local builds before they push work.
 
-The next step would be to get in running in your CI pipeline, whether that be Jenkins, Travis, or whatever. Each time changes are pushed to your integration environment, the tests would then run and report any failures.
+The next step would be to get it running in your CI pipeline, whether that be Jenkins, Travis, or whatever. Each time changes are pushed to your integration environment, the tests would then run and report any failures.
 
-------
+---
 
 # Benefits
 
@@ -361,7 +479,7 @@ The next step would be to get in running in your CI pipeline, whether that be Je
 - And _continues to meet those requirements_
 - The tests are executing in a real browser and behaving like real users
 
-------
+---
 
 # Other forms of testing
 
@@ -369,7 +487,7 @@ It is _not_ a replacement for other forms of testing. If you've already got unit
 
 Having said that, if you're not doing any testing at all - it's not a bad place to start.
 
-------
+---
 
 # Pitfalls
 
@@ -379,13 +497,13 @@ Writing scenarios can be quite tricky! It can be hard to write them in a clean a
 Example of bad scenario here
 ```
 
-------
+---
 
 # Pitfalls
 
 Testing via a headless browser can sometimes be unstable. For example, if your page moves while Capybara is interacting with it, it might fail to click a button correctly. One case would be animations and transitions.
 
-We can get round this with a little snippet of JavaScript which we pass to the web browser via the tests:
+We can get round this with a little snippet of JavaScript which we pass to the web browser via the tests. This forcibly disables css transitions. If you were using jQuery animations, you could also set `jQuery.fx.off = true`.
 
 ```js
 (function() {
@@ -396,7 +514,7 @@ We can get round this with a little snippet of JavaScript which we pass to the w
   });
 })()
 ```
-------
+---
 
 # Pitfalls
 
@@ -406,7 +524,7 @@ The best way round this is to write a script to load your testing environment up
 
 Sometimes it can be helpful to write a script which runs before the test suite (For example, each time your test environment is rebuilt) and sets the data up up front to keep the tests themselves performant.
 
-------
+---
 
 # Pitfalls
 
@@ -420,7 +538,7 @@ This is incredibly brittle - if someone changes the HTML they could easily break
 
 TL;DR - don't use XPath!
 
-------
+---
 
 # Don't use XPath!
 
@@ -446,7 +564,7 @@ Use CSS selectors, or if you must use XPath - at least write _sensible_ XPath.
 
 ```//*[@id="search_button"]```
 
-------
+---
 
 ## Links
 
@@ -460,81 +578,11 @@ Use CSS selectors, or if you must use XPath - at least write _sensible_ XPath.
 
 
 
-
-<link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab:700" rel="stylesheet">
-
-<style type="text/css">body {background: white none;}#impress,#impress > div,.step {-webkit-transition: none!important;-moz-transition: none!important;-ms-transition: none!important;-o-transition: none!important;transition: none!important;}</style>
-
-<style type="text/css">
-  .cover {
-    color: #fff;
-    font-family: 'Roboto Slab', serif;
-    font-size: 40px;
-    text-shadow: 0 0 100px black;
-    text-align: center;
-  }
-
-  h1,
-  h2,
-  h3 {
-    font-family: 'Roboto Slab', serif;
-  }
-
-  .cover:before {
-    content: '';
-    display: block;
-    width: 200%;
-    height: 200%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: transparent radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 100%);
-  }
-
-  .cover > * {
-    position: relative;
-  }
-
-  .cover h1 {
-    font-size: 100px;
-  }
-
-  .cover h2 {
-    font-size: 70px;
-  }
-
-  .cover img {
-    display: none;
-  }
-
-  body {
-    background-size: cover;
-    font-family: "Roboto", sans-serif;
-  }
-
-</style>
-
-<script>
-(function() {
-
-  document.addEventListener('impress:stepenter', function(e) {
-    var cover = e.target.querySelector('.cover img')
-
-    if(cover && e.target.contains(cover)) {
-      var cover_src = cover.getAttribute('src')
-      document.body.style.backgroundImage = 'url(' + cover_src + ')'
-    } else {
-      document.body.style.backgroundImage = 'none'
-    }
-  })
-
-  document.addEventListener('impress:stepleave', function(e) {
-    var cover = e.target.querySelector('.cover img')
-
-    if(cover && e.target.contains(cover)) {
-      document.body.style.backgroundImage = 'none'
-    }
-  })
-})()
-</script>
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
