@@ -394,6 +394,8 @@ Given(/^I have (\d+) todo items in the list$/) do |number|
     input.set("Todo item #{number}")
     input.native.send_keys(:return)
   end
+
+  page.assert_selector('.todo', :count => number)
 end
 
 When(/^I delete (\d+) todo items$/) do |number|
