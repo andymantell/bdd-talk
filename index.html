@@ -106,7 +106,7 @@ And type `bundle install` to install these dependencies (See http://bundler.io/)
 
 ---
 
-<video loop style="max-width: 100%" src="assets/images/init.ogv"></video>
+<video loop style="max-width: 80%" src="assets/images/init.ogv"></video>
 
 ---
 
@@ -144,7 +144,7 @@ Now's a good time to `git commit -m "Initial commit"`
 
 # Pending step definitions
 
-<video loop style="max-width: 100%" src="assets/images/pending-steps.ogv"></video>
+<video loop style="max-width: 80%" src="assets/images/pending-steps.ogv"></video>
 
 ---
 
@@ -156,233 +156,63 @@ Now's a good time to `git commit -m "Initial commit"`
 
 # Step definitions
 
-Running `cucumber` again now gives us this:
-
-```
-Feature: Basic todo list manipulation
-
-  Scenario: Entering a single todo item            # features/todos.feature:3
-    Given I am viewing the TodoMVC Vue example # features/step_definitions/todos.rb:1
-      TODO (Cucumber::Pending)
-      ./features/step_definitions/todos.rb:2:in `/^I am viewing the TodoMVC Vue example$/'
-      features/todos.feature:4:in `Given I am viewing the TodoMVC Vue example'
-    When I enter a todo                            # features/step_definitions/todos.rb:5
-    Then I see my todo in the list                 # features/step_definitions/todos.rb:9
-
-1 scenario (1 pending)
-3 steps (2 skipped, 1 pending)
-0m0.003s
-```
+<video loop style="max-width: 80%" src="assets/images/empty-steps.ogv"></video>
 
 ---
 
-# Filling out the step definitions
-
-```ruby
-Given(/^I am viewing the TodoMVC Vue example$/) do
-  visit('http://todomvc.com/examples/vue/')
-end
-
-When(/^I enter a todo$/) do
-  input = find('.new-todo')
-  input.set('Write Futuresync slides')
-  input.native.send_keys(:return)
-end
-
-Then(/^I see my todo in the list$/) do
-  find('.todo-list .todo label', :text => 'Write Futuresync slides')
-end
-```
+<img src="assets/images/filled-out-steps.png" alt="Filled out steps" style="width: 100%">
 
 ---
 
-Running `cucumber` again, you should see:
-
-```
-including Capybara::DSL in the global scope is not recommended!
-Feature: Basic todo list manipulation
-
-  Scenario: Entering a single todo item        # features/todos.feature:3
-    Given I am viewing the TodoMVC Vue example # features/step_definitions/todos.rb:1
-    When I enter a todo                        # features/step_definitions/todos.rb:7
-    Then I see my todo in the list             # features/step_definitions/todos.rb:13
-
-1 scenario (1 passed)
-3 steps (3 passed)
-0m1.850s
-```
+<video loop style="max-width: 80%" src="assets/images/initial-test-run.ogv"></video>
 
 Green!
 
 ---
 
-# Fail!
-
-If you run this again however, you will see the following
-
-```
-Feature: Basic todo list manipulation
-  Scenario: Entering a single todo item        # features/todos.feature:3
-    Given I am viewing the TodoMVC Vue example # features/step_definitions/todos.rb:1
-    When I enter a todo                        # features/step_definitions/todos.rb:5
-    Then I see my todo in the list             # features/step_definitions/todos.rb:11
-      Ambiguous match, found 2 elements matching css ".todo-list .todo label" with text "Write Futuresync slides" (Capybara::Ambiguous)
-      ./features/step_definitions/todos.rb:12:in `/^I see my todo in the list$/'
-      features/todos.feature:6:in `Then I see my todo in the list'
-
-Failing Scenarios:
-cucumber features/todos.feature:3 # Scenario: Entering a single todo item
-
-1 scenario (1 failed)
-3 steps (1 failed, 2 passed)
-0m3.568s
-```
+<video loop style="max-width: 80%" src="assets/images/ambiguous-match.ogv"></video>
 
 ---
 
-
-# Getting the system into a known state each time
-
-What's happened here is that this particular app has used `window.localStorage` as the "database" for todo items. Each time we run the tests, it remembers what we had in there last time!
-
-To combat this, this particular app needs us to empty out the local storage. We will do this with a "hook"
-
-`/features/support/hooks.rb`
-```ruby
-Before do |scenario|
-  begin
-    visit('http://todomvc.com/page-that-doesnt-exist')
-    page.execute_script('localStorage.clear()')
-  rescue Capybara::Poltergeist::JavascriptError
-  end
-end
-```
-
-This will run before _every_ scenario. You could also feasibly do this in the `Given` step. This is just an example - the things you might need to do, and _where_ is appropriate to do them will vary depending on your app.
-
-_Yes, I'm silently swallowing JavaScript errors, because TodoMVC is flaky_
+<img src="assets/images/screenshots.png" alt="Screenshots" style="width: 100%">
 
 ---
 
-# Error screenshots
-
-In this instance, the error message was relatively descriptive. Sometimes however, you will want to see what was in the browser at the point where it fails.
-
-We can do this with another hook to automatically take screenshots upon failure:
-
-```
-After do |scenario|
-  if scenario.failed?
-    p "Scenario failed, screenshot generated."
-    time = Time.now.strftime('%Y_%m_%d_%H_%M_%S_')
-    name_of_scenario = time + scenario.name.gsub(/\s+/, "_").gsub("/","_")
-    save_screenshot("screenshots/#{name_of_scenario}.png", full: true)
-  end
-end
-```
+<img src="assets/images/2017-06-03T11:17:45ZEntering a single todo item.png" alt="Error screenshot" style="width: 100%">
 
 ---
 
-# Error screenshots
-
-`Ambiguous match, found 2 elements matching css ".todo-list .todo label" with text "Write Futuresync slides" (Capybara::Ambiguous)`
-
-![Error screenshot](assets/images/2017_05_06_13_17_29_Entering_a_single_todo_item.png)
----
-
-# More scenarios
-
-You can have multiple scenarios relating to a particular feature in each `.feature` file. You can also have multiple `.feature` files. This is useful for structuring your tests in a sensible way.
-
-```
-Feature: Basic todo list manipulation
-
-  Scenario: Entering a single todo item
-    Given I am viewing the TodoMVC Vue example
-    When I enter a todo
-    Then I see my todo in the list
-
-  Scenario: Deleting a todo item
-    Given I am viewing the TodoMVC Vue example
-    And I have 1 todo items in the list
-    When I delete 1 todo items
-    Then I see 0 todo items in the list
-
-  Scenario: Deleting several todo items
-    Given I am viewing the TodoMVC Vue example
-    And I have 7 todo items in the list
-    When I delete 4 todo items
-    Then I see 3 todo items in the list
-```
+<img src="assets/images/clear-localstorage.png" alt="Clear localstorage" style="width: 100%">
 
 ---
 
-# Parameterized steps
-
-```ruby
-Given(/^I have (\d+) todo items in the list$/) do |number|
-  input = find('.new-todo')
-
-  number.to_i.times do
-    input.set("Todo item #{number}")
-    input.native.send_keys(:return)
-  end
-
-  page.assert_selector('.todo', :count => number)
-end
-
-When(/^I delete (\d+) todo items$/) do |number|
-  number.to_i.times do
-    first('.destroy', :visible => false, :wait => true).trigger('click')
-  end
-end
-
-Then(/^I see (\d+) todo items in the list$/) do |number|
-  page.assert_selector('.todo', :count => number)
-end
-```
+<img src="assets/images/parameterized-steps.png" alt="Parameterized steps" style="width: 100%">
 
 ---
 
-# Scenario outlines
-
-The previous example contains quite a lot of repetition.
-
-We can combat this with "Scenario Outlines"
-
-```
-  Scenario: Deleting a todo item
-    Given I am viewing the TodoMVC Vue example
-    And I have "1" todo items in the list
-    When I delete "1" todo items
-    Then I see "0" todo items in the list
-
-  Scenario: Deleting several todo items
-    Given I am viewing the TodoMVC Vue example
-    And I have 7 todo items in the list
-    When I delete 4 todo items
-    Then I see 3 todo items in the list
-```
+<img src="assets/images/parameterized-step-definitions.png" alt="Parameterized steps" style="width: 100%">
 
 ---
 
-# Scenario outlines
+<video loop style="max-width: 80%" src="assets/images/parameterized-steps.ogv"></video>
 
-```
-Scenario Outline: Deleting a todo item
-    Given I am viewing the TodoMVC Vue example
-    And I have <start> todo items in the list
-    When I delete <delete> todo items
-    Then I see <result> todo items in the list
+---
 
-    Examples:
-      | start | delete | result |
-      | 1     | 1      | 0      |
-      | 5     | 5      | 0      |
-      | 10    | 5      | 5      |
-      | 7     | 4      | 3      |
-      | 100   | 99     | 1      |
-```
+### Scenario outlines
+
+<img src="assets/images/parameterized-steps.png" alt="Parameterized steps" style="width: 100%">
+
+---
+
+### Scenario outlines
+
+<img src="assets/images/scenario-outlines.png" alt="Scenario outlines" style="width: 100%">
+
+---
+
+### Scenario outlines
+
+<video loop style="max-width: 80%" src="assets/images/scenario-outlines.ogv"></video>
 
 ---
 
