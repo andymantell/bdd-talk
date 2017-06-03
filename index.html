@@ -39,8 +39,6 @@ class: center, middle
 # Behaviour Driven Development
 ## Brought to you today by Gherkins, Cucumbers and an enormous Guinea pig
 
-<!-- ![Capybara](assets/images/capybara.jpg) -->
-
 <br><br>
 
 Andy Mantell - Contract frontend developer<br>
@@ -108,29 +106,8 @@ And type `bundle install` to install these dependencies (See http://bundler.io/)
 
 ---
 
-<!-- # Setup -->
-
 <video loop style="max-width: 100%" src="assets/images/init.ogv"></video>
 
-<!-- Type `cucumber --init`
-
-You should end up with a folder structure like:
-
-```
-/features/
-  /step_definitions/
-  /support/
-    env.rb
-```
-
-Then `cucumber` and you should see
-
-```
-0 scenarios
-0 steps
-0m0.000s
-```
- -->
 ---
 
 # Configure Capybara
@@ -161,75 +138,20 @@ Now's a good time to `git commit -m "Initial commit"`
 
 # Gherkin scenario
 
-We're going to write a scenario inside a "feature" file like this:
-
-`/features/todos.feature`
-```
-Feature: Basic todo list manipulation
-
-  Scenario: Entering a single todo item
-    Given I am viewing the TodoMVC Vue example
-    When I enter a todo
-    Then I see my todo in the list
-```
+<img src="assets/images/todos-feature.png" alt="Todos feature" style="width: 100%">
 
 ---
 
 # Pending step definitions
 
-Once this file has been created, type `cucumber` again. You should see the following:
+<video loop style="max-width: 100%" src="assets/images/pending-steps.ogv"></video>
 
-<small>
-
-```
-➜  bdd-talk-example git:(master) cucumber
-Feature: Basic todo list manipulation
-
-  Scenario: Entering a single todo item            # features/todos.feature:3
-    Given I am viewing the TodoMVC Vue example # features/todos.feature:4
-    When I enter a todo                            # features/todos.feature:5
-    Then I see my todo in the list                 # features/todos.feature:6
-
-1 scenario (1 undefined)
-3 steps (3 undefined)
-0m0.004s
-
-You can implement step definitions for undefined steps with these snippets:
-
-Given(/^I am viewing the TodoMVC Vue example$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-When(/^I enter a todo$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I see my todo in the list$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-```
-
-</small>
 ---
 
 # Step definitions
 
-We paste these stubbed out steps into a new file:
+<img src="assets/images/pending-steps.png" alt="Pending steps" style="width: 100%">
 
-`/features/step_definitions/todos.rb`
-```ruby
-Given(/^I am viewing the TodoMVC Vue example$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-When(/^I enter a todo$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I see my todo in the list$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-```
 ---
 
 # Step definitions
