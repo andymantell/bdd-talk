@@ -216,7 +216,7 @@ Green!
 
 ---
 
-# Examples of other Capybara commands
+# Capybara commands
 
 - `find` - finds an element based on a CSS selector or XPath
 - `fill_in` - fills in an input field
@@ -234,7 +234,17 @@ http://www.rubydoc.info/github/jnicklas/capybara
 
 Developers would run the test suite against their local builds before they push work.
 
+<center>
+<img src="assets/images/laptop.jpg" alt="Laptop" style="width: 150px">
+</center>
+
 The next step would be to get it running in your CI pipeline, whether that be Jenkins, Travis, or whatever. Each time changes are pushed to your integration environment, the tests would then run and report any failures.
+
+<center>
+<img src="assets/images/jenkins.png" alt="Jenkins" style="width: 125px">
+<img src="assets/images/travis.png" alt="Travis" style="width: 150px">
+<img src="assets/images/gitlab.svg" alt="Gitlab" style="width: 150px">
+</center>
 
 ---
 
@@ -242,7 +252,11 @@ The next step would be to get it running in your CI pipeline, whether that be Je
 
 - Fantastic at ensuring your system is developed to meet the original requirements
 - And _continues to meet those requirements_
-- The tests are executing in a real browser and behaving like real users
+- Capybara executes the tests in a "real" browser and interacts with the UI like a real user would
+
+<center>
+<img src="assets/images/computer-capybara.jpg" alt="Capybara" style="width: 60%">
+</center>
 
 ---
 
@@ -252,82 +266,9 @@ It is _not_ a replacement for other forms of testing. If you've already got unit
 
 Having said that, if you're not doing any testing at all - it's not a bad place to start.
 
----
-
-# Pitfalls
-
-Writing scenarios can be quite tricky! It can be hard to write them in a clean and friendly way whilst also making them map nicely to step definitions. They are best written by a developer _and_ someone from elsewhere in the business. Not one or the other.
-
-```
-Example of bad scenario here
-```
-
----
-
-# Pitfalls
-
-Testing via a headless browser can sometimes be unstable. For example, if your page moves while Capybara is interacting with it, it might fail to click a button correctly. One case would be animations and transitions.
-
-We can get round this with a little snippet of JavaScript which we pass to the web browser via the tests. This forcibly disables css transitions. If you were using jQuery animations, you could also set `jQuery.fx.off = true`.
-
-```js
-(function() {
-  document.addEventListener('DOMContentLoaded', function() {
-    var style = document.createElement('style')
-    style.textContent = '* { -webkit-transition: none!important;transition:none!important}'
-    document.body.appendChild(style)
-  });
-})()
-```
----
-
-# Pitfalls
-
-Tests are quite sensitive to content on the page. If your testing environment contains content from your live system which might be subject to change via a CMS, then you might find it difficult to test effectively without writing brittle tests.
-
-The best way round this is to write a script to load your testing environment up with consistent data. The theory is that the `Given` steps should set the system up into a known state such that your tests are stable.
-
-Sometimes it can be helpful to write a script which runs before the test suite (For example, each time your test environment is rebuilt) and sets the data up up front to keep the tests themselves performant.
-
----
-
-# Pitfalls
-
-Be careful with XPath!
-
-The default selector for Capybara is CSS, but it used to be XPath and I see many people still using it as the default. However, I often see this:
-
-```/html/body/main/div[2]/div/form/input[2]```
-
-This is incredibly brittle - if someone changes the HTML they could easily break hundreds of tests in one fell swoop.
-
-TL;DR - don't use XPath!
-
----
-
-# Don't use XPath!
-
-_Unless you really mean it..._
-
-```ruby
-summary = find('summary', :text => 'What does Caution mean?')
-summary.click
-
-details = summary.find(:xpath, '..')
-details.all('.panel p', :minimum => 1)
-```
-
-XPath can look _up_ the DOM tree with a `..`
-
-And across it, with `preceding-sibling::*` or `following-sibling::*`
-
-Whereas CSS can only really look _down_ the tree.
-
-It's extremely powerful, but you probably don't need it most of the time.
-
-Use CSS selectors, or if you must use XPath - at least write _sensible_ XPath.
-
-```//*[@id="search_button"]```
+<center>
+<img src="assets/images/test_meme.jpg" alt="Test in production" style="width: 40%">
+</center>
 
 ---
 
