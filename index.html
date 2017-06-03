@@ -91,7 +91,7 @@ Ruby, Bundler and PhantomJS installed on your system
 
 In a new folder, create a `Gemfile` containing the following:
 
-```
+```ruby
 source 'https://rubygems.org'
 
 gem 'cucumber'
@@ -104,9 +104,11 @@ And type `bundle install` to install these dependencies (See http://bundler.io/)
 
 ---
 
-# Setup
+<!-- # Setup -->
 
-Type `cucumber --init`
+<video loop style="max-width: 100%" src="assets/images/init.ogv"></video>
+
+<!-- Type `cucumber --init`
 
 You should end up with a folder structure like:
 
@@ -124,7 +126,7 @@ Then `cucumber` and you should see
 0 steps
 0m0.000s
 ```
-
+ -->
 ---
 
 # Configure Capybara
@@ -571,7 +573,7 @@ Use CSS selectors, or if you must use XPath - at least write _sensible_ XPath.
 ## Links
 
 - These slides: https://andymantell.github.io/bdd-talk/
-- Example test suite from the slides: https://github.com/andymantell/bdd-talk-example
+- Example test suite from the slides: https://github.com/andymantell/bdd-talk-example(
 - https://github.com/teamcapybara/capybara and http://www.rubydoc.info/github/jnicklas/capybara
 
 
@@ -585,6 +587,21 @@ Use CSS selectors, or if you must use XPath - at least write _sensible_ XPath.
     </script>
     <script>
       var slideshow = remark.create();
+
+      slideshow.on('afterShowSlide', function(slide) {
+        var slideElement = document.querySelectorAll('.remark-slide')[slide.getSlideIndex()]
+        var vid = slideElement.querySelector('video')
+        vid && vid.play()
+      })
+
+      slideshow.on('afterHideSlide', function(slide) {
+        var slideElement = document.querySelectorAll('.remark-slide')[slide.getSlideIndex()]
+        var vid = slideElement.querySelector('video')
+        if(vid) {
+         vid.pause()
+         vid.currentTime = 0
+        }
+      })
     </script>
   </body>
 </html>
